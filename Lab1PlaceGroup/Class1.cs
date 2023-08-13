@@ -122,7 +122,10 @@ public class GroupPickFilter : ISelectionFilter
 {
     public bool AllowElement(Element e)
     {
+            
+        if (e.Category == null) { return false; }
         return (e.Category.Id.IntegerValue.Equals((int)BuiltInCategory.OST_IOSModelGroups));
+
     }
     public bool AllowReference(Reference r, XYZ p)
     {
