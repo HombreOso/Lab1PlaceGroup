@@ -24,7 +24,25 @@ namespace Lab1PlaceGroup
 
             try
             {
-                //…Move most of code in Execute method to here.                             
+                //…Move most of code in Execute method to here.
+                Reference pickedref = null;
+
+                //Pick a group
+                Selection sel = uiapp.ActiveUIDocument.Selection;
+
+                GroupPickFilter selFilter = new GroupPickFilter();
+                pickedref = sel.PickObject(ObjectType.Element, selFilter, "Please select a group");
+                Element elem = doc.GetElement(pickedref);
+                Group group = elem as Group;
+
+                //Pick point
+                XYZ point = sel.PickPoint("Please pick a point to place group");
+
+                //Place the group
+                Transaction trans = new Transaction(doc);
+                trans.Start("Lab");
+                doc.Create.PlaceGroup(point, group.GroupType);
+                trans.Commit();
             }
 
             //If the user right-clicks or presses Esc, handle the exception
@@ -39,24 +57,7 @@ namespace Lab1PlaceGroup
             }
 
             //Define a reference Object to accept the pick result
-            Reference pickedref = null;
-
-            //Pick a group
-            Selection sel = uiapp.ActiveUIDocument.Selection;
-
-            GroupPickFilter selFilter = new GroupPickFilter();
-            pickedref = sel.PickObject(ObjectType.Element, selFilter, "Please select a group");
-            Element elem = doc.GetElement(pickedref);
-            Group group = elem as Group;
-
-            //Pick point
-            XYZ point = sel.PickPoint("Please pick a point to place group");
-
-            //Place the group
-            Transaction trans = new Transaction(doc);
-            trans.Start("Lab");
-            doc.Create.PlaceGroup(point, group.GroupType);
-            trans.Commit();
+           
 
             return Result.Succeeded;
         }
