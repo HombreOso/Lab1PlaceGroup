@@ -23,6 +23,27 @@ namespace Lab1PlaceGroup
             XYZ center = (bounding.Max + bounding.Min) * 0.5;
             return center;
         }
+
+        /// Return the room in which the given point is located
+        Room GetRoomOfGroup(Document doc, XYZ point)
+        {
+            FilteredElementCollector collector = new FilteredElementCollector(doc);
+            collector.OfCategory(BuiltInCategory.OST_Rooms);
+            Room room = null;
+            foreach (Element elem in collector)
+            {
+                room = elem as Room;
+                if (room != null)
+                {
+                    // Decide if this point is in the picked room                  
+                    if (room.IsPointInRoom(point))
+                    {
+                        break;
+                    }
+                }
+            }
+            return room;
+        }
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
             //Get application and document objects
@@ -44,6 +65,8 @@ namespace Lab1PlaceGroup
                 pickedref = sel.PickObject(ObjectType.Element, selFilter, "Please select a group");
                 Element elem = doc.GetElement(pickedref);
                 Group group = elem as Group;
+                // Get the group's center point
+                XYZ origin = GetElementCenter(group);
 
                 //Pick point
                 XYZ point = sel.PickPoint("Please pick a point to place group");
