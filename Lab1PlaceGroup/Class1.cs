@@ -88,13 +88,12 @@ namespace Lab1PlaceGroup
 
                 TaskDialog.Show("Source room Center", coords);
 
-                //Pick point
-                XYZ point = sel.PickPoint("Please pick a point to place group");
-
                 //Place the group
                 Transaction trans = new Transaction(doc);
                 trans.Start("Lab");
-                doc.Create.PlaceGroup(point, group.GroupType);
+                // Calculate the new group's position
+                XYZ groupLocation = sourceCenter + new XYZ(20, 0, 0);
+                doc.Create.PlaceGroup(groupLocation, group.GroupType);
                 trans.Commit();
             }
 
