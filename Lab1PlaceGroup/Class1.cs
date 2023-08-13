@@ -44,6 +44,16 @@ namespace Lab1PlaceGroup
             }
             return room;
         }
+        /// Return a room's center point coordinates.
+        /// Z value is equal to the bottom of the room
+        public XYZ GetRoomCenter(Room room)
+        {
+            // Get the room center point.
+            XYZ boundCenter = GetElementCenter(room);
+            LocationPoint locPt = (LocationPoint)room.Location;
+            XYZ roomCenter = new XYZ(boundCenter.X, boundCenter.Y, locPt.Point.Z);
+            return roomCenter;
+        }
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
             //Get application and document objects
@@ -67,6 +77,16 @@ namespace Lab1PlaceGroup
                 Group group = elem as Group;
                 // Get the group's center point
                 XYZ origin = GetElementCenter(group);
+                // Get the room that the picked group is located in
+                Room room = GetRoomOfGroup(doc, origin);
+                // Get the room's center point  
+                XYZ sourceCenter = GetRoomCenter(room);
+                string coords =
+                "X = " + sourceCenter.X.ToString() + "\r\n" +
+                "Y = " + sourceCenter.Y.ToString() + "\r\n" +
+                "Z = " + sourceCenter.Z.ToString();
+
+                TaskDialog.Show("Source room Center", coords);
 
                 //Pick point
                 XYZ point = sel.PickPoint("Please pick a point to place group");
