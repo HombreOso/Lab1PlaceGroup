@@ -14,12 +14,22 @@ namespace Lab1PlaceGroup
     [Transaction(TransactionMode.Manual)]
     [Regeneration(RegenerationOption.Manual)]
     public class Class1 : IExternalCommand
+
+
     {
+        public XYZ GetElementCenter(Element elem)
+        {
+            BoundingBoxXYZ bounding = elem.get_BoundingBox(null);
+            XYZ center = (bounding.Max + bounding.Min) * 0.5;
+            return center;
+        }
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
             //Get application and document objects
             UIApplication uiapp = commandData.Application;
             Document doc = uiapp.ActiveUIDocument.Document;
+
+
 
 
             try
