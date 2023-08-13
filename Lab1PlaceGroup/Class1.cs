@@ -21,12 +21,31 @@ namespace Lab1PlaceGroup
             UIApplication uiapp = commandData.Application;
             Document doc = uiapp.ActiveUIDocument.Document;
 
+
+            try
+            {
+                //…Move most of code in Execute method to here.                             
+            }
+
+            //If the user right-clicks or presses Esc, handle the exception
+            catch (Autodesk.Revit.Exceptions.OperationCanceledException)
+            {
+                return Result.Cancelled;
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message;
+                return Result.Failed;
+            }
+
             //Define a reference Object to accept the pick result
             Reference pickedref = null;
 
             //Pick a group
             Selection sel = uiapp.ActiveUIDocument.Selection;
-            pickedref = sel.PickObject(ObjectType.Element, "Please select a group");
+
+            GroupPickFilter selFilter = new GroupPickFilter();
+            pickedref = sel.PickObject(ObjectType.Element, selFilter, "Please select a group");
             Element elem = doc.GetElement(pickedref);
             Group group = elem as Group;
 
